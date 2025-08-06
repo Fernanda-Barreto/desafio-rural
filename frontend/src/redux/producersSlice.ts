@@ -1,7 +1,7 @@
 // src/redux/producersSlice.ts
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 
-// --- Tipos de dados (AGORA EXPORTADOS) ---
+
 
 export interface CulturaPlantada {
   id?: number;

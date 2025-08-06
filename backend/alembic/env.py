@@ -3,17 +3,17 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
 
-# --- INÍCIO DA SEÇÃO CORRIGIDA ---
+
 import os
 import sys
-# Adiciona a pasta 'backend' ao PYTHONPATH para que as importações funcionem
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Importa a Base e os modelos após adicionar o caminho
+
 from database import Base
-import models # Importa o módulo models para que a Base conheça os modelos
+import models 
 target_metadata = Base.metadata
-# --- FIM DA SEÇÃO CORRIGIDA ---
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

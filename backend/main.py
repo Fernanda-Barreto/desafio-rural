@@ -22,9 +22,7 @@ def get_db():
     finally:
         db.close()
 
-# ---------------------------
-# Endpoints de CRUD - Produtor
-# ---------------------------
+
 @app.post("/produtores/", response_model=schemas.Produtor, status_code=status.HTTP_201_CREATED)
 def create_produtor_endpoint(produtor: schemas.ProdutorCreate, db: Session = Depends(get_db)):
     logger.info(f"Recebida requisição para criar produtor: {produtor.nome_produtor}")
@@ -36,7 +34,6 @@ def create_produtor_endpoint(produtor: schemas.ProdutorCreate, db: Session = Dep
         logger.error(f"Erro ao criar produtor: {e.detail}")
         raise e
 
-# CORREÇÃO: Adicionado o parâmetro 'cpf_cnpj' para buscar produtores específicos
 @app.get("/produtores/", response_model=List[schemas.Produtor])
 def read_produtores_endpoint(skip: int = 0, limit: int = 100, cpf_cnpj: Optional[str] = None, db: Session = Depends(get_db)):
     logger.info("Recebida requisição para listar produtores")
@@ -71,10 +68,7 @@ def delete_produtor_endpoint(produtor_id: int, db: Session = Depends(get_db)):
     logger.info(f"Produtor com ID {produtor_id} deletado com sucesso")
     return {"message": "Produtor excluído com sucesso"}
 
-# ---------------------------
-# Endpoints do Dashboard
-# ---------------------------
-# CORREÇÃO: As rotas agora retornam o resultado direto da função de CRUD
+
 @app.get("/dashboard/total_fazendas")
 def get_total_fazendas_endpoint(db: Session = Depends(get_db)):
     logger.info("Buscando total de fazendas")

@@ -3,14 +3,12 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { type RootState, type AppDispatch } from '../redux/store';
-// Altere esta linha para importar a nova ação:
 import { fetchAllDashboardDataFromProducers } from '../redux/producersSlice'; 
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// --- Estilos para replicar o visual do Tailwind e shadcn/ui ---
 
 const MainWrapper = styled.div`
   width: 100%;
@@ -80,7 +78,7 @@ const Dashboard: React.FC = () => {
   const { dashboard, loading, error } = useSelector((state: RootState) => state.producers);
 
   useEffect(() => {
-    // Altere a chamada da ação para a nova que calcula no frontend
+   
     dispatch(fetchAllDashboardDataFromProducers());
   }, [dispatch]);
 
@@ -100,9 +98,7 @@ const Dashboard: React.FC = () => {
     );
   }
   
-  // --- Lógica de dados ajustada para os gráficos ---
 
-  // Mapeamento para garantir consistência nos nomes dos estados
   const stateAbbreviationMap: { [key: string]: string } = {
     'SÃO PAULO': 'SP',
     'MINAS GERAIS': 'MG',
@@ -114,14 +110,13 @@ const Dashboard: React.FC = () => {
     'GOIÁS': 'GO',
     'TOCANTINS': 'TO',
     'BAHIA': 'BA',
-    // Adicione mais estados se necessário
+    
   };
 
-  // Lógica para Fazendas por Estado, agrupando e normalizando a capitalização
+ 
   const porEstadoMap = new Map();
   dashboard?.por_estado.forEach(item => {
     const estadoBruto = item.estado.toUpperCase().trim();
-    // Normaliza o nome do estado para sua abreviação ou mantém o nome original
     const estadoNormalizado = stateAbbreviationMap[estadoBruto] || estadoBruto;
     porEstadoMap.set(estadoNormalizado, (porEstadoMap.get(estadoNormalizado) || 0) + item.count);
   });
@@ -140,7 +135,7 @@ const Dashboard: React.FC = () => {
   // Paleta de cores para os gráficos
   const newPalette = ['#667eea', '#805ad5', '#d53f8c', '#dd6b20', '#f6ad55', '#4fd1c5', '#4299e1', '#48bb78'];
 
-  // Lógica para Fazendas por Cultura, agrupando e usando apenas o nome da cultura
+  
   const porCulturaMap = new Map();
   dashboard?.por_cultura.forEach(item => {
     const culturaNormalizada = item.cultura.toUpperCase().trim();
@@ -167,7 +162,7 @@ const Dashboard: React.FC = () => {
     }],
   };
   
-  // Opções dos gráficos para remover a legenda
+ 
   const pieOptions = {
     plugins: {
       legend: {

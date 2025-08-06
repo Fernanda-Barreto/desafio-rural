@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
-from database import Base # <--- AQUI ESTÁ A CORREÇÃO
+from database import Base
 
 class Produtor(Base):
     __tablename__ = "produtores"

@@ -59,14 +59,14 @@ def _validate_cpf_cnpj(cpf_cnpj: str):
     else:
         raise HTTPException(status_code=400, detail="CPF/CNPJ deve ter 11 ou 14 dígitos.")
     
-# --- Funções CRUD para Produtor ---
+
 def get_produtor(db: Session, produtor_id: int):
     return db.query(models.Produtor).filter(models.Produtor.id == produtor_id).first()
 
 def get_produtor_by_cpf_cnpj(db: Session, cpf_cnpj: str):
     return db.query(models.Produtor).filter(models.Produtor.cpf_cnpj == cpf_cnpj).first()
 
-# CORREÇÃO: Adicionada a instrução joinedload para carregar as propriedades e culturas
+
 def get_produtores(db: Session, skip: int = 0, limit: int = 100, cpf_cnpj: str = None):
     query = db.query(models.Produtor).options(
         joinedload(models.Produtor.propriedades).joinedload(models.PropriedadeRural.culturas)
@@ -75,7 +75,7 @@ def get_produtores(db: Session, skip: int = 0, limit: int = 100, cpf_cnpj: str =
         query = query.filter(models.Produtor.cpf_cnpj == re.sub(r'[^0-9]', '', cpf_cnpj))
     return query.offset(skip).limit(limit).all()
 
-# CORREÇÃO: Lógica para verificar duplicatas antes de criar
+
 def create_produtor(db: Session, produtor_schema: schemas.ProdutorCreate):
     _validate_cpf_cnpj(produtor_schema.cpf_cnpj)
     
@@ -105,7 +105,7 @@ def create_produtor(db: Session, produtor_schema: schemas.ProdutorCreate):
     
     return get_produtor(db, db_produtor.id)
 
-# CORREÇÃO: Lógica completa para atualização de propriedades e culturas
+
 def update_produtor(db: Session, produtor_id: int, produtor_data: schemas.ProdutorCreate):
     db_produtor = get_produtor(db, produtor_id)
     if not db_produtor:
@@ -169,8 +169,7 @@ def delete_produtor(db: Session, produtor_id: int):
     db.commit()
     return db_produtor
 
-# --- Funções para o Dashboard ---
-# CORREÇÃO: As funções agora retornam dicionários para serem usados diretamente na rota da API
+
 def get_total_fazendas(db: Session):
     result = db.query(models.PropriedadeRural).count()
     return {"total_fazendas": result}

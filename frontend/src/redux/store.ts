@@ -3,7 +3,7 @@ import producersReducer from './producersSlice';
 
 export const store = configureStore({
   reducer: {
-    producers: producersReducer, // <-- ADICIONADO O REDUCER
+    producers: producersReducer, 
   },
 });
 
