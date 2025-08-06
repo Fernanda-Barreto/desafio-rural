@@ -69,4 +69,45 @@ O sistema permite operações completas de **CRUD (Criar, Ler, Atualizar, Exclui
 
 ```
 
-teste
+##🚀 Como Executar a Aplicação
+Siga estas instruções em terminais separados.
+
+##✅ Pré-requisitos
+Docker Desktop
+
+Node.js & npm
+
+Python 3.10+ & pip
+
+⚙️ Passo a Passo
+```bash
+# 1. Configurar e Iniciar o Backend
+cd backend
+python -m venv venv
+.\venv\Scripts\Activate.ps1   # Para PowerShell
+pip install -r requirements.txt
+cd ..
+
+# Subir os contêineres e o banco de dados
+docker-compose up --build
+# (Deixe esse terminal rodando)
+
+# 2. Executar as migrações do banco de dados
+# Em um novo terminal:
+cd backend
+.\venv\Scripts\Activate.ps1
+alembic upgrade head
+
+# Popular o banco de dados com dados fictícios
+python seed.py
+
+# 3. Configurar e Iniciar o Frontend
+# Em um novo terminal:
+cd frontend
+npm install
+npm run dev
+```
+🌐 Acessar a Aplicação
+Frontend: http://localhost:5173
+
+Backend (Docs Swagger): http://localhost:8000/docs
