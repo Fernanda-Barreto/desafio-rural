@@ -67,4 +67,6 @@ O sistema permite operações completas de **CRUD (Criar, Ler, Atualizar, Exclui
 ├── docker-compose.yml        # Orquestração de serviços Docker
 └── README.md                 # Este arquivo
 
-```bash
+```
+
+teste
