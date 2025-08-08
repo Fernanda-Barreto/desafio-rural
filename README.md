@@ -98,9 +98,6 @@ cd backend
 .\venv\Scripts\Activate.ps1
 alembic upgrade head
 
-# Popular o banco de dados com dados fictícios
-python seed.py
-
 # 3. Configurar e Iniciar o Frontend
 # Em um novo terminal:
 cd frontend
