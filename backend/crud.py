@@ -59,13 +59,12 @@ def _validate_cpf_cnpj(cpf_cnpj: str):
     else:
         raise HTTPException(status_code=400, detail="CPF/CNPJ deve ter 11 ou 14 dígitos.")
     
-
+# --- Funções CRUD para Produtor ---
 def get_produtor(db: Session, produtor_id: int):
     return db.query(models.Produtor).filter(models.Produtor.id == produtor_id).first()
 
 def get_produtor_by_cpf_cnpj(db: Session, cpf_cnpj: str):
     return db.query(models.Produtor).filter(models.Produtor.cpf_cnpj == cpf_cnpj).first()
-
 
 def get_produtores(db: Session, skip: int = 0, limit: int = 100, cpf_cnpj: str = None):
     query = db.query(models.Produtor).options(
@@ -74,7 +73,6 @@ def get_produtores(db: Session, skip: int = 0, limit: int = 100, cpf_cnpj: str =
     if cpf_cnpj:
         query = query.filter(models.Produtor.cpf_cnpj == re.sub(r'[^0-9]', '', cpf_cnpj))
     return query.offset(skip).limit(limit).all()
-
 
 def create_produtor(db: Session, produtor_schema: schemas.ProdutorCreate):
     _validate_cpf_cnpj(produtor_schema.cpf_cnpj)
@@ -105,7 +103,7 @@ def create_produtor(db: Session, produtor_schema: schemas.ProdutorCreate):
     
     return get_produtor(db, db_produtor.id)
 
-
+# CORREÇÃO FINAL: Lógica de atualização mais segura e simplificada
 def update_produtor(db: Session, produtor_id: int, produtor_data: schemas.ProdutorCreate):
     db_produtor = get_produtor(db, produtor_id)
     if not db_produtor:
@@ -113,49 +111,23 @@ def update_produtor(db: Session, produtor_id: int, produtor_data: schemas.Produt
 
     db_produtor.nome_produtor = produtor_data.nome_produtor
 
-    existing_propriedades_ids = {p.id for p in db_produtor.propriedades}
-    updated_propriedades_ids = {p.id for p in produtor_data.propriedades if p.id is not None}
+    # Deleta todas as propriedades e culturas existentes do produtor
+    for prop in db_produtor.propriedades:
+        for cultura in prop.culturas:
+            db.delete(cultura)
+        db.delete(prop)
     
-    for prop_id in existing_propriedades_ids - updated_propriedades_ids:
-        prop_to_delete = db.query(models.PropriedadeRural).filter(models.PropriedadeRural.id == prop_id).first()
-        if prop_to_delete:
-            db.delete(prop_to_delete)
-
+    # Recria todas as propriedades e culturas a partir dos dados da requisição
     for prop_data in produtor_data.propriedades:
         _validate_propriedade_area(prop_data)
         
-        if prop_data.id is not None:
-            db_propriedade = db.query(models.PropriedadeRural).filter(models.PropriedadeRural.id == prop_data.id).first()
-            if db_propriedade:
-                for key, value in prop_data.dict(exclude_unset=True).items():
-                    setattr(db_propriedade, key, value)
-                
-                existing_culturas_ids = {c.id for c in db_propriedade.culturas}
-                updated_culturas_ids = {c.id for c in prop_data.culturas if c.id is not None}
-                
-                for cultura_id in existing_culturas_ids - updated_culturas_ids:
-                    cultura_to_delete = db.query(models.CulturaPlantada).filter(models.CulturaPlantada.id == cultura_id).first()
-                    if cultura_to_delete:
-                        db.delete(cultura_to_delete)
-                
-                for cultura_data in prop_data.culturas:
-                    if cultura_data.id is not None:
-                        db_cultura = db.query(models.CulturaPlantada).filter(models.CulturaPlantada.id == cultura_data.id).first()
-                        if db_cultura:
-                            for key, value in cultura_data.dict(exclude_unset=True).items():
-                                setattr(db_cultura, key, value)
-                    else:
-                        db_cultura = models.CulturaPlantada(**cultura_data.dict(), propriedade_id=db_propriedade.id)
-                        db.add(db_cultura)
-
-        else:
-            db_propriedade = models.PropriedadeRural(**prop_data.dict(exclude={'culturas'}), produtor_id=db_produtor.id)
-            db.add(db_propriedade)
-            db.flush()
-            
-            for cultura_data in prop_data.culturas:
-                db_cultura = models.CulturaPlantada(**cultura_data.dict(), propriedade_id=db_propriedade.id)
-                db.add(db_cultura)
+        db_propriedade = models.PropriedadeRural(**prop_data.dict(exclude={'culturas'}), produtor_id=db_produtor.id)
+        db.add(db_propriedade)
+        db.flush()
+        
+        for cultura_data in prop_data.culturas:
+            db_cultura = models.CulturaPlantada(**cultura_data.dict(), propriedade_id=db_propriedade.id)
+            db.add(db_cultura)
 
     db.commit()
     db.refresh(db_produtor)
@@ -168,7 +140,6 @@ def delete_produtor(db: Session, produtor_id: int):
     db.delete(db_produtor)
     db.commit()
     return db_produtor
-
 
 def get_total_fazendas(db: Session):
     result = db.query(models.PropriedadeRural).count()
