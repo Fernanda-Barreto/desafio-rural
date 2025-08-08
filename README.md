@@ -16,7 +16,7 @@ O sistema permite operações completas de **CRUD (Criar, Ler, Atualizar, Exclui
 - **Relacionamentos**: Suportar múltiplos produtores, propriedades e culturas.
 
 ### 📝 Cadastro de Produtor Rural
-<video src="docs/images/cadastro.mkv" controls="true" muted="true" width="100%"></video>
+<video src="desafio-rural/docs/images/cadastro.mkv" controls="true" muted="true" width="100%"></video>
 *Vídeo 2: Demonstração do formulário de cadastro de produtores e suas propriedades.*
 
 ### ✏️ Edição de Produtor Rural
