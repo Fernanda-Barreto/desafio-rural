@@ -15,6 +15,14 @@ O sistema permite operações completas de **CRUD (Criar, Ler, Atualizar, Exclui
 - **Dashboard**: Exibir um dashboard com o total de fazendas, total de hectares e gráficos de pizza por estado, por cultura e por uso do solo.
 - **Relacionamentos**: Suportar múltiplos produtores, propriedades e culturas.
 
+### 📝 Cadastro de Produtor Rural
+<video src="docs/images/cadastro.mkv" controls="true" muted="true" width="100%"></video>
+*Vídeo 2: Demonstração do formulário de cadastro de produtores e suas propriedades.*
+
+### ✏️ Edição de Produtor Rural
+<video src="docs/images/alteracoes.mkv" controls="true" muted="true" width="100%"></video>
+*Vídeo 3: Demonstração da atualização de dados de um produtor e suas propriedades.*
+
 ---
 
 ## 🧱 Tecnologias e Arquitetura
